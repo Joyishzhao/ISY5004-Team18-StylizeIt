@@ -1,0 +1,41 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# --- IDE / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Secrets ---
+.env
+*.env.local
+
+# --- Heavy artifacts (keep README + .gitkeep) ---
+models/**/*.pth
+models/**/*.pt
+models/**/*.safetensors
+models/**/*.bin
+models/**/*.ckpt
+models/**/sd-inpainting/
+models/**/canny/
+models/**/depth/
+models/**/openpose/
+models/**/vit-b32/
+
+# --- Datasets ---
+data/davis2017/*
+!data/davis2017/.gitkeep
+data/youtube_vos/*
+!data/youtube_vos/.gitkeep
+data/self_collected/raw/
+data/self_collected/clips/
+
+# --- Runtime artifacts (uploads, intermediate frames, results) ---
+artifacts/

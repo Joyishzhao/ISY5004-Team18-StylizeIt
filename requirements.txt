@@ -1,0 +1,52 @@
+# StylizeIt — Python dependencies
+# Tested with Python 3.10 / 3.11 on Windows 11, Ubuntu 22.04, macOS 14.
+#
+# Quick install (CPU-only, runs the API end-to-end with placeholder
+# stylization so you can develop without a GPU):
+#     pip install -r requirements.txt
+#
+# GPU install (recommended for real stylization):
+#   1. Install a matching torch build first, e.g. for CUDA 12.1:
+#        pip install torch==2.3.0 torchvision==0.18.0 --index-url https://download.pytorch.org/whl/cu121
+#   2. Then run:
+#        pip install -r requirements.txt
+
+# ---------- Web / API ----------
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-multipart==0.0.9
+pydantic==2.9.2
+
+# ---------- Video / image IO ----------
+opencv-python==4.10.0.84
+imageio[ffmpeg]==2.35.1
+Pillow==10.4.0
+numpy==1.26.4
+
+# ---------- Deep learning core (override with CUDA build manually if needed) ----------
+torch==2.3.1
+torchvision==0.18.1
+
+# ---------- Diffusion stylization stack ----------
+diffusers==0.30.3
+transformers==4.44.2
+accelerate==0.33.0
+safetensors==0.4.5
+huggingface-hub==0.24.7
+
+# ---------- Detection + segmentation ----------
+# Grounding DINO Python bindings
+groundingdino-py==0.4.0
+# SAM 2 — install from source (latest API):
+#   pip install "git+https://github.com/facebookresearch/sam2.git"
+# Kept commented because pip frozen wheels for SAM 2 are not on PyPI yet.
+# git+https://github.com/facebookresearch/sam2.git@main
+
+# ---------- Evaluation metrics ----------
+lpips==0.1.4
+scikit-image==0.24.0
+
+# ---------- Misc utilities ----------
+PyYAML==6.0.2
+tqdm==4.66.5
+python-dotenv==1.0.1

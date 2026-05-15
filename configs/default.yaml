@@ -1,0 +1,55 @@
+# StylizeIt default config preset (MVP)
+# This file is exposed via GET /api/v1/configs and used by the pipeline.
+
+name: default.yaml
+style_scope: anime-only
+
+input_limits:
+  max_duration_sec: 10
+  max_width: 1280
+  max_height: 720
+  max_fps: 30
+  allowed_mime:
+    - video/mp4
+    - video/quicktime
+    - video/webm
+
+grounding:
+  model: grounding_dino
+  weights: groundingdino_swint_ogc.pth
+  box_threshold: 0.30
+  text_threshold: 0.25
+
+tracking:
+  model: sam2
+  checkpoint: sam2.1_hiera_large.pt
+  config: configs/sam2.1/sam2.1_hiera_l.yaml
+
+generation:
+  model: stable_diffusion_inpainting
+  weights_dir: sd-inpainting
+  controlnet:
+    enabled: true
+    type: canny
+    conditioning_scale: 0.75    # higher = stick to structure, less random drift
+  num_inference_steps: 22       # 10 steps is very noisy frame-to-frame; use 20-28 for stability
+  guidance_scale: 7.0
+  strength: 0.68                # lower = keep chained init (prev frame look); range 0.5-0.8
+  seed: 42                      # same seed every frame reduces color/texture lottery
+  temporal_consistency:
+    enabled: true               # blend previous stylized frame into init inside mask
+    init_blend: 0.55            # 0=off, 0.7=very smooth but can smear on fast motion
+  style_prompt_suffix: "anime style, vibrant colors, clean lineart, consistent character design, studio ghibli aesthetic"
+  negative_prompt: "blurry, low quality, deformed, extra limbs, inconsistent colors, flickering, frame inconsistency"
+
+temporal:
+  method: optical_flow_warp     # options: ema | optical_flow_warp
+  flow_model: raft              # torchvision raft_large, no manual weight download
+  raft_alpha: 0.28              # smaller = trust warped prev more (less flicker, slight motion lag)
+  ema_alpha: 0.7                # only used when method == "ema"
+  occlusion_thresh: 1.5         # forward-backward consistency threshold (in pixels)
+
+evaluation:
+  enabled: true
+  clip_model: openai/clip-vit-base-patch32
+  lpips_net: alex

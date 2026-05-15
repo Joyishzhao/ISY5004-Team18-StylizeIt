@@ -1,0 +1,15 @@
+# StylizeIt — anime-only preset.
+# Inherits default.yaml semantically; override only what changes.
+
+name: anime_only.yaml
+style_scope: anime-only
+
+generation:
+  num_inference_steps: 20
+  guidance_scale: 8.0
+  style_prompt_suffix: "anime style, vibrant cel-shading, clean lineart, studio ghibli aesthetic, highly detailed"
+  negative_prompt: "photo, realistic, 3d render, blurry, deformed, low quality"
+
+temporal:
+  method: optical_flow_warp
+  ema_alpha: 0.75

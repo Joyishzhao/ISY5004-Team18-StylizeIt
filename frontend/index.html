@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StylizeIt</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.0.0/dist/flowbite.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-1: #18151f;
+      --bg-2: #261f1a;
+      --bg-3: #17322a;
+      --panel: rgba(28, 26, 34, 0.9);
+      --panel-soft: rgba(16, 16, 22, 0.75);
+      --line: #8a8499;
+      --ink: #f5f2ff;
+      --muted: #c7bfd8;
+      --accent: #fbbf24;
+      --ok: #34d399;
+      --warn: #fbbf24;
+      --error: #fb7185;
+      --teal: #2dd4bf;
+    }
+
+    * { image-rendering: pixelated; box-sizing: border-box; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace !important;
+      color: var(--ink) !important;
+      margin: 0 !important;
+      min-height: 100vh !important;
+      background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 40%, var(--bg-3) 100%) !important;
+      background-attachment: fixed !important;
+    }
+
+    .pixel-grid {
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 18px 18px;
+    }
+
+    .pixel-card {
+      background: var(--panel) !important;
+      border: 2px solid var(--line) !important;
+      border-radius: 0 !important;
+      box-shadow: 6px 6px 0 #000 !important;
+      backdrop-filter: blur(4px);
+    }
+
+    h1, h2, h3 {
+      font-family: 'Space Mono', monospace !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.06em !important;
+      margin: 0 !important;
+    }
+
+    .brand-title { text-transform: none !important; }
+
+    .pixel-input,
+    .pixel-select,
+    .pixel-textarea {
+      width: 100% !important;
+      background: var(--panel-soft) !important;
+      color: var(--ink) !important;
+      border: 2px solid var(--line) !important;
+      border-radius: 0 !important;
+      padding: 10px 12px !important;
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 13px !important;
+    }
+
+    .pixel-input::placeholder,
+    .pixel-textarea::placeholder { color: var(--muted) !important; }
+
+    .pixel-btn {
+      position: relative !important;
+      overflow: hidden !important;
+      width: 100% !important;
+      border: 2px solid #000 !important;
+      background: var(--accent) !important;
+      color: #241b08 !important;
+      border-radius: 0 !important;
+      font-family: 'Space Mono', monospace !important;
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+      padding: 11px 14px !important;
+      box-shadow: 4px 4px 0 #000 !important;
+      transition: transform 0.12s ease !important;
+      cursor: pointer;
+    }
+
+    .pixel-btn:hover { transform: translate(-2px, -2px) !important; box-shadow: 6px 6px 0 #000 !important; }
+    .pixel-btn:active { transform: translate(2px, 2px) !important; box-shadow: 2px 2px 0 #000 !important; }
+    .pixel-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .step-chip {
+      border: 2px solid var(--line) !important;
+      border-radius: 0 !important;
+      background: rgba(0, 0, 0, 0.28) !important;
+      padding: 10px 12px !important;
+    }
+
+    .step-chip.active { background: rgba(251, 191, 36, 0.18) !important; }
+    .step-chip.done   { background: rgba(52, 211, 153, 0.18) !important; }
+
+    .step-1 { border-color: rgba(251, 191, 36, 0.75) !important; }
+    .step-2 { border-color: rgba(52, 211, 153, 0.75) !important; }
+    .step-3 { border-color: rgba(251, 113, 133, 0.75) !important; }
+    .step-4 { border-color: rgba(45, 212, 191, 0.75) !important; }
+
+    .status-ok    { color: var(--ok) !important; }
+    .status-warn  { color: var(--warn) !important; }
+    .status-error { color: var(--error) !important; }
+
+    .drop-active {
+      background: rgba(251, 191, 36, 0.15) !important;
+      border-color: var(--accent) !important;
+    }
+
+    .progress-track {
+      height: 6px; background: rgba(255,255,255,0.08); border: 2px solid var(--line);
+    }
+    .progress-fill {
+      height: 100%; background: var(--accent); width: 0%; transition: width 0.3s ease;
+    }
+
+    .metric-cell {
+      border: 2px solid var(--line);
+      padding: 8px 10px;
+      background: rgba(0,0,0,0.25);
+    }
+    .metric-key { font-size: 10px; color: var(--muted); text-transform: uppercase; }
+    .metric-val { font-size: 16px; font-weight: 700; color: var(--ink); }
+  </style>
+</head>
+<body class="pixel-grid min-h-screen">
+  <main class="mx-auto w-full max-w-6xl px-4 py-6 md:px-8 md:py-10">
+    <header class="pixel-card p-6">
+      <div class="flex items-baseline justify-between flex-wrap gap-2">
+        <h1 class="brand-title text-2xl md:text-4xl">StylizeIt</h1>
+        <p class="text-xs text-slate-300">API: <span id="apiHealth" class="status-warn">checking...</span></p>
+      </div>
+      <p class="mt-2 text-sm text-slate-200">Target-level video stylization. Drop a clip, type a prompt, hit Run.</p>
+    </header>
+
+    <section class="mt-6 grid gap-4 md:grid-cols-4">
+      <div id="chip-1" class="step-chip step-1"><p class="text-[11px] text-amber-200">Step 1</p><h2 class="mt-1 text-sm">Upload</h2></div>
+      <div id="chip-2" class="step-chip step-2"><p class="text-[11px] text-emerald-200">Step 2</p><h2 class="mt-1 text-sm">Prompt</h2></div>
+      <div id="chip-3" class="step-chip step-3"><p class="text-[11px] text-rose-200">Step 3</p><h2 class="mt-1 text-sm">Run</h2></div>
+      <div id="chip-4" class="step-chip step-4"><p class="text-[11px] text-teal-200">Step 4</p><h2 class="mt-1 text-sm">Preview</h2></div>
+    </section>
+
+    <section class="mt-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+      <article class="pixel-card p-5 md:p-6">
+        <h2 class="text-lg">Input Panel</h2>
+        <div class="mt-4 space-y-4">
+          <input type="file" id="videoFile" accept="video/mp4,video/quicktime,video/webm" class="hidden" />
+          <div id="dropZone" class="border-2 border-dashed border-slate-300 bg-black/30 p-6 text-center cursor-pointer">
+            <p class="font-bold">Video Drop Zone</p>
+            <p id="dropHint" class="mt-1 text-xs text-slate-300">click or drop a file &middot; max 10s / 720p / 30fps</p>
+          </div>
+
+          <textarea id="prompt" rows="4" class="pixel-textarea" placeholder="Please input your instructions here!"></textarea>
+
+          <div class="grid gap-3 sm:grid-cols-2">
+            <select id="configSelect" class="pixel-select">
+              <option value="default.yaml">default.yaml</option>
+            </select>
+            <input id="styleInput" class="pixel-input" value="anime-only" disabled />
+          </div>
+
+          <button id="runBtn" class="pixel-btn">Start Run</button>
+
+          <div>
+            <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+            <p id="stageLabel" class="mt-2 text-xs text-slate-300">idle</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="space-y-6">
+        <div class="pixel-card p-5 md:p-6">
+          <h2 class="text-lg">Run Log</h2>
+          <ul id="runLog" class="mt-4 space-y-2 text-sm max-h-56 overflow-auto">
+            <li class="text-slate-400">No run yet.</li>
+          </ul>
+        </div>
+
+        <div class="pixel-card p-5 md:p-6">
+          <h2 class="text-lg">Preview</h2>
+          <div id="previewWrap" class="mt-3 grid aspect-video place-items-center border-2 border-dashed border-slate-300 bg-black/35 text-sm text-slate-300">
+            Output Frame
+          </div>
+          <a id="downloadLink" class="hidden mt-3 pixel-btn text-center" download>Download MP4</a>
+        </div>
+
+        <div class="pixel-card p-5 md:p-6">
+          <h2 class="text-lg">Metrics</h2>
+          <div id="metricsGrid" class="mt-3 grid grid-cols-2 gap-2">
+            <div class="metric-cell"><p class="metric-key">mIoU</p><p class="metric-val" id="m-miou">--</p></div>
+            <div class="metric-cell"><p class="metric-key">Boundary F</p><p class="metric-val" id="m-bf">--</p></div>
+            <div class="metric-cell"><p class="metric-key">Warping Err</p><p class="metric-val" id="m-warp">--</p></div>
+            <div class="metric-cell"><p class="metric-key">CLIP Score</p><p class="metric-val" id="m-clip">--</p></div>
+            <div class="metric-cell col-span-2"><p class="metric-key">Background LPIPS</p><p class="metric-val" id="m-lpips">--</p></div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+  // ------------------------------------------------------------------
+  // Configuration
+  // ------------------------------------------------------------------
+  // When the page is served by FastAPI under /ui, use the same origin.
+  // When opened from disk, point at the local backend.
+  const API_BASE = (location.origin && location.origin.startsWith("http"))
+      ? location.origin + "/api/v1"
+      : "http://localhost:8000/api/v1";
+
+  const STAGE_ORDER = ["ingest", "grounding", "tracking", "generation", "temporal", "export", "evaluation", "completed"];
+
+  // ------------------------------------------------------------------
+  // Elements
+  // ------------------------------------------------------------------
+  const $ = (id) => document.getElementById(id);
+  const apiHealth = $("apiHealth");
+  const dropZone = $("dropZone");
+  const dropHint = $("dropHint");
+  const videoFile = $("videoFile");
+  const promptEl = $("prompt");
+  const configSelect = $("configSelect");
+  const runBtn = $("runBtn");
+  const progressFill = $("progressFill");
+  const stageLabel = $("stageLabel");
+  const runLog = $("runLog");
+  const previewWrap = $("previewWrap");
+  const downloadLink = $("downloadLink");
+  const metricEls = {
+    miou: $("m-miou"),
+    boundary_f: $("m-bf"),
+    warping_error: $("m-warp"),
+    clip_score: $("m-clip"),
+    background_lpips: $("m-lpips"),
+  };
+  const chipEls = [null, $("chip-1"), $("chip-2"), $("chip-3"), $("chip-4")];
+
+  let selectedFile = null;
+
+  // ------------------------------------------------------------------
+  // API health + config presets
+  // ------------------------------------------------------------------
+  async function checkHealth() {
+    try {
+      const r = await fetch(API_BASE + "/health");
+      const j = await r.json();
+      apiHealth.textContent = j.ok ? "online" : "offline";
+      apiHealth.className = j.ok ? "status-ok" : "status-error";
+    } catch (e) {
+      apiHealth.textContent = "offline";
+      apiHealth.className = "status-error";
+    }
+  }
+  async function loadConfigs() {
+    try {
+      const r = await fetch(API_BASE + "/configs");
+      const j = await r.json();
+      configSelect.innerHTML = "";
+      for (const c of j.configs) {
+        const opt = document.createElement("option");
+        opt.value = c.name; opt.textContent = c.name;
+        configSelect.appendChild(opt);
+      }
+    } catch (e) { /* keep default option */ }
+  }
+  checkHealth(); loadConfigs();
+
+  // ------------------------------------------------------------------
+  // Drop / pick file
+  // ------------------------------------------------------------------
+  dropZone.addEventListener("click", () => videoFile.click());
+  dropZone.addEventListener("dragover", (e) => { e.preventDefault(); dropZone.classList.add("drop-active"); });
+  dropZone.addEventListener("dragleave", () => dropZone.classList.remove("drop-active"));
+  dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropZone.classList.remove("drop-active");
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  videoFile.addEventListener("change", () => {
+    if (videoFile.files.length) handleFile(videoFile.files[0]);
+  });
+  function handleFile(file) {
+    selectedFile = file;
+    dropHint.innerHTML = `<span class="status-ok">${file.name}</span> &middot; ${(file.size/1024/1024).toFixed(2)} MB`;
+    chipEls[1].classList.add("done");
+  }
+
+  promptEl.addEventListener("input", () => {
+    if (promptEl.value.trim()) chipEls[2].classList.add("done");
+    else chipEls[2].classList.remove("done");
+  });
+
+  // ------------------------------------------------------------------
+  // Submit run + poll status
+  // ------------------------------------------------------------------
+  function logLine(t, cls = "status-warn") {
+    if (runLog.querySelector(".text-slate-400")) runLog.innerHTML = "";
+    const li = document.createElement("li");
+    const ts = new Date().toLocaleTimeString();
+    li.innerHTML = `<span class="${cls}">${ts}</span> ${t}`;
+    runLog.appendChild(li);
+    runLog.scrollTop = runLog.scrollHeight;
+  }
+
+  function setStage(stage, progress) {
+    const idx = STAGE_ORDER.indexOf(stage);
+    const pct = Math.round((progress || 0) * 100);
+    progressFill.style.width = pct + "%";
+    stageLabel.textContent = `${stage || "idle"} (${pct}%)`;
+    // chip-3 = running, chip-4 = preview ready
+    if (idx >= 0) chipEls[3].classList.add("active");
+    if (stage === "completed") {
+      chipEls[3].classList.remove("active");
+      chipEls[3].classList.add("done");
+      chipEls[4].classList.add("done");
+    }
+  }
+
+  async function postRun() {
+    const form = new FormData();
+    form.append("video", selectedFile);
+    form.append("prompt", promptEl.value.trim());
+    form.append("config_name", configSelect.value);
+    form.append("style", "anime-only");
+    const r = await fetch(API_BASE + "/runs", { method: "POST", body: form });
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}));
+      throw new Error(err.error?.message || `HTTP ${r.status}`);
+    }
+    return r.json();
+  }
+
+  async function pollUntilDone(runId) {
+    let lastLogCount = 0;
+    while (true) {
+      const r = await fetch(`${API_BASE}/runs/${runId}`);
+      const j = await r.json();
+      setStage(j.stage, j.progress);
+      const logs = j.logs || [];
+      for (let i = lastLogCount; i < logs.length; i++) logLine(logs[i], "status-ok");
+      lastLogCount = logs.length;
+
+      if (j.status === "completed") return j;
+      if (j.status === "failed") {
+        logLine("Pipeline failed: " + (j.error_message || ""), "status-error");
+        throw new Error("Pipeline failed");
+      }
+      if (j.status === "cancelled") {
+        logLine("Cancelled", "status-warn");
+        throw new Error("Cancelled");
+      }
+      await new Promise((res) => setTimeout(res, 1500));
+    }
+  }
+
+  async function fetchResult(runId) {
+    const r = await fetch(`${API_BASE}/runs/${runId}/result`);
+    if (!r.ok) throw new Error("Result fetch failed: " + r.status);
+    return r.json();
+  }
+
+  function renderResult(res) {
+    const videoUrl = res.output?.video_url;
+    if (videoUrl) {
+      previewWrap.innerHTML = `
+        <video src="${API_BASE.replace(/\/api\/v1$/, '')}${videoUrl}" controls autoplay loop muted
+               class="w-full h-full object-contain bg-black"></video>`;
+      downloadLink.href = `${API_BASE}/runs/${res.run_id}/download`;
+      downloadLink.classList.remove("hidden");
+    }
+    const m = res.metrics || {};
+    for (const k of Object.keys(metricEls)) {
+      const v = m[k];
+      metricEls[k].textContent = (v === null || v === undefined) ? "--" : Number(v).toFixed(4);
+    }
+  }
+
+  runBtn.addEventListener("click", async () => {
+    if (!selectedFile) { alert("Please pick a video file first."); return; }
+    if (!promptEl.value.trim()) { alert("Please enter a prompt."); return; }
+    runBtn.disabled = true;
+    runBtn.textContent = "Running...";
+    runLog.innerHTML = "";
+    logLine("Submitting run...", "status-warn");
+    try {
+      const created = await postRun();
+      logLine("Run ID: " + created.run_id, "status-ok");
+      chipEls[3].classList.add("active");
+      const done = await pollUntilDone(created.run_id);
+      logLine("Run completed", "status-ok");
+      const res = await fetchResult(done.run_id);
+      renderResult(res);
+    } catch (e) {
+      logLine(String(e), "status-error");
+    } finally {
+      runBtn.disabled = false;
+      runBtn.textContent = "Start Run";
+    }
+  });
+  </script>
+</body>
+</html>

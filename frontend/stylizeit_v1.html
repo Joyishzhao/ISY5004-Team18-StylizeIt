@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StylizeIt</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.0.0/dist/flowbite.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-1: #18151f;
+      --bg-2: #261f1a;
+      --bg-3: #17322a;
+      --panel: rgba(28, 26, 34, 0.9);
+      --panel-soft: rgba(16, 16, 22, 0.75);
+      --line: #8a8499;
+      --ink: #f5f2ff;
+      --muted: #c7bfd8;
+      --accent: #fbbf24;
+      --ok: #34d399;
+      --warn: #fbbf24;
+      --error: #fb7185;
+      --teal: #2dd4bf;
+    }
+
+    * {
+      image-rendering: pixelated;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace !important;
+      color: var(--ink) !important;
+      margin: 0 !important;
+      min-height: 100vh !important;
+      background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 40%, var(--bg-3) 100%) !important;
+      background-attachment: fixed !important;
+    }
+
+    .pixel-grid {
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 18px 18px;
+    }
+
+    .pixel-card {
+      background: var(--panel) !important;
+      border: 2px solid var(--line) !important;
+      border-radius: 0 !important;
+      box-shadow: 6px 6px 0 #000 !important;
+      backdrop-filter: blur(4px);
+    }
+
+    h1, h2, h3 {
+      font-family: 'Space Mono', monospace !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.06em !important;
+      margin: 0 !important;
+    }
+
+    .brand-title {
+      text-transform: none !important;
+    }
+
+    .pixel-input,
+    .pixel-select,
+    .pixel-textarea {
+      width: 100% !important;
+      background: var(--panel-soft) !important;
+      color: var(--ink) !important;
+      border: 2px solid var(--line) !important;
+      border-radius: 0 !important;
+      padding: 10px 12px !important;
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 13px !important;
+    }
+
+    .pixel-input::placeholder,
+    .pixel-textarea::placeholder {
+      color: var(--muted) !important;
+    }
+
+    .pixel-btn {
+      position: relative !important;
+      overflow: hidden !important;
+      width: 100% !important;
+      border: 2px solid #000 !important;
+      background: var(--accent) !important;
+      color: #241b08 !important;
+      border-radius: 0 !important;
+      font-family: 'Space Mono', monospace !important;
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+      padding: 11px 14px !important;
+      box-shadow: 4px 4px 0 #000 !important;
+      transition: transform 0.12s ease !important;
+    }
+
+    .pixel-btn:hover {
+      transform: translate(-2px, -2px) !important;
+      box-shadow: 6px 6px 0 #000 !important;
+    }
+
+    .pixel-btn:active {
+      transform: translate(2px, 2px) !important;
+      box-shadow: 2px 2px 0 #000 !important;
+    }
+
+    .pixel-btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.26) 0 6px,
+        transparent 6px 12px
+      );
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .pixel-btn.run-click::after {
+      animation: pixelFlash 280ms steps(5, end);
+    }
+
+    @keyframes pixelFlash {
+      0% { opacity: 0.8; }
+      100% { opacity: 0; }
+    }
+
+    .step-chip {
+      border: 2px solid var(--line) !important;
+      border-radius: 0 !important;
+      background: rgba(0, 0, 0, 0.28) !important;
+      padding: 10px 12px !important;
+    }
+
+    .step-1 { border-color: rgba(251, 191, 36, 0.75) !important; }
+    .step-2 { border-color: rgba(52, 211, 153, 0.75) !important; }
+    .step-3 { border-color: rgba(251, 113, 133, 0.75) !important; }
+    .step-4 { border-color: rgba(45, 212, 191, 0.75) !important; }
+
+    .status-ok { color: var(--ok) !important; }
+    .status-warn { color: var(--warn) !important; }
+    .status-error { color: var(--error) !important; }
+  </style>
+</head>
+<body class="pixel-grid min-h-screen">
+  <main class="mx-auto w-full max-w-6xl px-4 py-6 md:px-8 md:py-10">
+    <header class="pixel-card p-6">
+      <h1 class="brand-title text-2xl md:text-4xl">StylizeIt</h1>
+      <p class="mt-2 text-sm text-slate-200">Target-level video stylization.</p>
+    </header>
+
+    <section class="mt-6 grid gap-4 md:grid-cols-4">
+      <div class="step-chip step-1"><p class="text-[11px] text-amber-200">Step 1</p><h2 class="mt-1 text-sm">Upload</h2></div>
+      <div class="step-chip step-2"><p class="text-[11px] text-emerald-200">Step 2</p><h2 class="mt-1 text-sm">Prompt</h2></div>
+      <div class="step-chip step-3"><p class="text-[11px] text-rose-200">Step 3</p><h2 class="mt-1 text-sm">Run</h2></div>
+      <div class="step-chip step-4"><p class="text-[11px] text-teal-200">Step 4</p><h2 class="mt-1 text-sm">Preview</h2></div>
+    </section>
+
+    <section class="mt-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+      <article class="pixel-card p-5 md:p-6">
+        <h2 class="text-lg">Input Panel</h2>
+        <div class="mt-4 space-y-4">
+          <div class="border-2 border-dashed border-slate-300 bg-black/30 p-6 text-center">
+            <p class="font-bold">Video Drop Zone</p>
+            <p class="mt-1 text-xs text-slate-300">max 10s / 720p / 30fps</p>
+          </div>
+
+          <textarea rows="4" class="pixel-textarea" placeholder="Please input your instructions here!"></textarea>
+
+          <div class="grid gap-3 sm:grid-cols-2">
+            <select class="pixel-select">
+              <option>default.yaml</option>
+            </select>
+            <input class="pixel-input" value="anime-only v1" disabled />
+          </div>
+
+          <button id="runBtn" class="pixel-btn">Start Run</button>
+        </div>
+      </article>
+
+      <article class="space-y-6">
+        <div class="pixel-card p-5 md:p-6">
+          <h2 class="text-lg">Run Log</h2>
+          <ul class="mt-4 space-y-2 text-sm">
+            <li><span class="status-warn">00:00</span> queued</li>
+            <li><span class="status-ok">00:01</span> ingest complete</li>
+            <li><span class="status-ok">00:03</span> grounding lock acquired</li>
+            <li><span class="status-warn">00:06</span> temporal stabilization running</li>
+            <li><span class="status-error">--:--</span> failure placeholder</li>
+          </ul>
+        </div>
+
+        <div class="pixel-card p-5 md:p-6">
+          <h2 class="text-lg">Preview</h2>
+          <div class="mt-3 grid aspect-video place-items-center border-2 border-dashed border-slate-300 bg-black/35 text-sm text-slate-300">
+            Output Frame
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+  <script>
+  const runBtn = document.getElementById("runBtn");
+  if (runBtn) {
+    const baseText = runBtn.textContent;
+    runBtn.addEventListener("click", () => {
+      runBtn.classList.remove("run-click");
+      void runBtn.offsetWidth;
+      runBtn.classList.add("run-click");
+      runBtn.textContent = "Running...";
+      runBtn.disabled = true;
+
+      setTimeout(() => {
+        runBtn.textContent = baseText;
+        runBtn.disabled = false;
+      }, 900);
+    });
+  }
+  </script>
+</body>
+</html>
