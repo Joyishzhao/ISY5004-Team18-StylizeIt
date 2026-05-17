@@ -16,6 +16,7 @@ Thumbs.db
 # --- Secrets ---
 .env
 *.env.local
+*.env
 
 # --- Heavy artifacts (keep README + .gitkeep) ---
 models/**/*.pth

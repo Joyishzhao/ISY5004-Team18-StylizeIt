@@ -37,6 +37,23 @@ from backend.pipeline import (
 from backend.evaluation import metrics as eval_metrics
 
 
+def _use_wan_vace(config_name: str) -> bool:
+    try:
+        import yaml  # type: ignore
+
+        from backend.core.config import settings
+
+        path = settings.configs_dir / config_name
+        if not path.exists():
+            path = settings.configs_dir / "default.yaml"
+        if not path.exists():
+            return False
+        cfg = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        return str(cfg.get("generation", {}).get("backend", "")).lower() == "wan_vace"
+    except Exception:  # noqa: BLE001
+        return False
+
+
 log = logging.getLogger("stylizeit.pipeline")
 
 
@@ -99,15 +116,31 @@ def run_pipeline(run_id: str) -> None:
         _update(run_id, RunStage.tracking, 0.40, "Tracking + segmentation")
         tracking.run(ctx)
 
-        _update(run_id, RunStage.generation, 0.65, "Diffusion stylization")
-        generation.run(ctx)
+        wan_mode = _use_wan_vace(ctx.config_name)
 
-        _update(run_id, RunStage.temporal, 0.80, "Temporal stabilization")
-        temporal.run(ctx)
+        if wan_mode:
+            _update(run_id, RunStage.generation, 0.55, "Wan VACE video_edit (cloud)")
+            generation.run(ctx)
+            _update(
+                run_id,
+                RunStage.export,
+                0.90,
+                "Wan output ready (skipped RAFT — video-native temporal model)",
+            )
+            if ctx.output_path and Path(ctx.output_path).exists():
+                log.info("Using Wan output directly: %s", ctx.output_path)
+            else:
+                export.run(ctx)
+        else:
+            _update(run_id, RunStage.generation, 0.65, "Diffusion stylization (SD)")
+            generation.run(ctx)
 
-        _update(run_id, RunStage.export, 0.92, "Compositing + export")
-        compositor.run(ctx)
-        export.run(ctx)
+            _update(run_id, RunStage.temporal, 0.80, "Temporal stabilization (RAFT)")
+            temporal.run(ctx)
+
+            _update(run_id, RunStage.export, 0.92, "Compositing + export")
+            compositor.run(ctx)
+            export.run(ctx)
 
         _update(run_id, RunStage.evaluation, 0.97, "Evaluating metrics")
         eval_metrics.run(ctx)

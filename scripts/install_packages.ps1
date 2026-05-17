@@ -15,7 +15,7 @@ python -m pip install --upgrade pip setuptools wheel
 Write-Host ""
 Write-Host "==> Step 2: install PyTorch (CUDA 12.1 build)" -ForegroundColor Cyan
 Write-Host "    If you don't have a CUDA GPU, replace --index-url with the CPU wheel."
-pip install torch==2.3.1 torchvision==0.18.1 --index-url https://download.pytorch.org/whl/cu121
+pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124
 
 Write-Host ""
 Write-Host "==> Step 3: install everything in requirements.txt" -ForegroundColor Cyan

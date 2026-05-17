@@ -186,12 +186,22 @@ def _fallback_stylize(frame_bgr: np.ndarray) -> np.ndarray:
 # Main entry
 # ---------------------------------------------------------------------------
 
+def _generation_backend(cfg: dict) -> str:
+    return str(cfg.get("generation", {}).get("backend", "sd_inpaint")).lower()
+
+
 def run(ctx) -> None:  # type: ignore[no-untyped-def]
+    cfg = _load_yaml_config(getattr(ctx, "config_name", "default.yaml"))
+    if _generation_backend(cfg) == "wan_vace":
+        from backend.pipeline import generation_wan
+
+        log.info("[generation] backend=wan_vace — delegating to DashScope Wan VACE.")
+        generation_wan.run(ctx)
+        return
+
     stylized_dir: Path = ctx.run_dir / "stylized"
     stylized_dir.mkdir(parents=True, exist_ok=True)
     ctx.stylized_dir = stylized_dir
-
-    cfg = _load_yaml_config(getattr(ctx, "config_name", "default.yaml"))
     gen_cfg = cfg.get("generation", {})
     cn_cfg = gen_cfg.get("controlnet", {}) or {}
     tc_cfg = gen_cfg.get("temporal_consistency", {}) or {}

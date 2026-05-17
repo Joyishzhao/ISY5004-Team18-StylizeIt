@@ -12,8 +12,16 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+# Load project-root `.env` so `DASHSCOPE_API_KEY` etc. work without
+# `uvicorn --env-file .env` (uvicorn does not load .env by itself).
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(PROJECT_ROOT / ".env")
+except ImportError:
+    pass
 
 
 def _env_path(name: str, default: Path) -> Path:

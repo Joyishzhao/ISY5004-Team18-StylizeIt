@@ -145,7 +145,7 @@ Or run the equivalent commands by hand:
 $env:PYTHONUTF8 = "1"
 python -m pip install --upgrade pip setuptools wheel
 # CUDA 12.1 (drop --index-url for CPU-only)
-pip install torch==2.3.1 torchvision==0.18.1 --index-url https://download.pytorch.org/whl/cu121
+pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124
 pip install -r requirements.txt
 pip install "git+https://github.com/facebookresearch/sam2.git"
 # Pre-fetch Grounding DINO via transformers (avoids buggy groundingdino-py)
@@ -255,6 +255,31 @@ the API every two seconds; once the job completes, the result video and
 metric scores appear in the Preview panel.
 
 The full REST contract lives in [`doc/API.md`](doc/API.md).
+
+### Batch self-collected runs (all-Wan channel)
+
+If your phone clips are under `data/self_collected/clips/`, you can batch-run
+everything through the Wan VACE path and download outputs to a dedicated local
+folder:
+
+```powershell
+python scripts/run_selfcollect_wan_pipeline.py `
+  --api-base http://127.0.0.1:8000 `
+  --config-name wan_vace.yaml `
+  --output-dir "C:\Users\Zyan\Downloads"
+```
+
+Optional:
+
+- `--copy-artifacts`: also copy full `artifacts/runs/<run_id>/` into your output folder.
+- `--manifest data/self_collected/manifest.csv`: auto-build prompts from `prompt` or `subject` columns.
+- `--fallback-prompt "Turn the main subject into anime style"`: used when manifest has no prompt info.
+
+Output layout (in `--output-dir`):
+
+- `videos/*.mp4`: downloaded final videos (one file per input clip).
+- `meta/*.json`: per-run metadata, status, logs, metrics.
+- `index.json`: batch summary for all clips.
 
 ## 6. SOTA models we depend on
 

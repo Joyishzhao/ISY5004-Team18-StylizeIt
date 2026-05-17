@@ -62,12 +62,21 @@ def create_app() -> FastAPI:
 
     @app.on_event("startup")
     async def _print_banner() -> None:
+        import os
+
+        dash_key = os.getenv("DASHSCOPE_API_KEY", "")
+        public_base = os.getenv("STYLIZEIT_PUBLIC_BASE_URL", "")
         log.info("StylizeIt backend ready.")
         log.info("  API docs : http://localhost:8000/docs")
         log.info("  Frontend : http://localhost:8000/ui")
         log.info("  Artifacts: %s", settings.artifacts_dir)
         log.info("  Models   : %s", settings.models_dir)
         log.info("  Device   : %s", settings.device)
+        log.info(
+            "  Wan VACE : DASHSCOPE_API_KEY=%s  PUBLIC_BASE_URL=%s",
+            "set" if dash_key.strip() else "MISSING",
+            public_base or "MISSING",
+        )
 
     return app
 

@@ -1,0 +1,43 @@
+# StylizeIt — Wan 2.1 VACE Plus preset (recommended for fast MVP)
+# Uses Alibaba DashScope API (cloud). No local SD / RAFT weights required.
+
+name: wan_vace.yaml
+style_scope: anime-only
+
+input_limits:
+  max_duration_sec: 5          # Wan hard limit; ingest may allow 10s but we trim for API
+  max_width: 1280
+  max_height: 720
+  max_fps: 30
+
+grounding:
+  model: grounding_dino
+  box_threshold: 0.30
+  text_threshold: 0.25
+
+tracking:
+  model: sam2
+  # Only frame-0 mask is sent to Wan; Wan mask_type=tracking propagates internally.
+
+generation:
+  backend: wan_vace            # wan_vace | sd_inpaint
+  wan_vace:
+    region: intl                 # intl -> wan2.1-vace-plus (Singapore) | cn -> wanx2.1-vace-plus
+    function: video_edit
+    max_duration_sec: 5
+    mask_frame_id: 1              # Wan API is 1-based (1 = first frame, NOT 0)
+    mask_type: tracking          # Wan tracks mask — replaces our per-frame SAM2+RAFT for stylization
+    expand_ratio: 0.05
+    prompt_extend: false
+    poll_interval_sec: 15
+    poll_timeout_sec: 600
+    # Appended after the user's prompt. Keep quality-only — do NOT force a style here.
+    # Set to "" to send the user prompt alone.
+    style_prompt_suffix: "high quality, sharp details, natural proportions, no distortion, temporally consistent"
+
+# RAFT temporal block is IGNORED when backend=wan_vace (orchestrator skips it).
+temporal:
+  method: skip
+
+evaluation:
+  enabled: true

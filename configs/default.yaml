@@ -26,6 +26,7 @@ tracking:
   config: configs/sam2.1/sam2.1_hiera_l.yaml
 
 generation:
+  backend: sd_inpaint           # sd_inpaint | wan_vace (see configs/wan_vace.yaml)
   model: stable_diffusion_inpainting
   weights_dir: sd-inpainting
   controlnet:
