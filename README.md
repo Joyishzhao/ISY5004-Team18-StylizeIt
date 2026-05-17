@@ -266,7 +266,7 @@ folder:
 python scripts/run_selfcollect_wan_pipeline.py `
   --api-base http://127.0.0.1:8000 `
   --config-name wan_vace.yaml `
-  --output-dir "C:\Users\Zyan\Downloads"
+  --output-dir "C:\YourDir"
 ```
 
 Optional:
